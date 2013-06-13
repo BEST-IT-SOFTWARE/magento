@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    Enterprise
+ * @package     Enterprise_Pbridge
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+-->
+<config>
+    <modules>
+        <Enterprise_Pbridge>
+            <version>1.8.0.0.0</version>
+        </Enterprise_Pbridge>
+    </modules>
+    <global>
+        <models>
+            <enterprise_pbridge>
+                <class>Enterprise_Pbridge_Model</class>
+            </enterprise_pbridge>
+        </models>
+        <blocks>
+            <enterprise_pbridge>
+                <class>Enterprise_Pbridge_Block</class>
+            </enterprise_pbridge>
+        </blocks>
+        <helpers>
+            <enterprise_pbridge>
+                <class>Enterprise_Pbridge_Helper</class>
+            </enterprise_pbridge>
+        </helpers>
+        <events>
+            <controller_action_predispatch>
+                <observers>
+                    <enterprise_pbridge>
+                        <class>enterprise_pbridge/observer</class>
+                        <method>addPrivacyHeader</method>
+                    </enterprise_pbridge>
+                </observers>
+            </controller_action_predispatch>
+            <payment_method_is_active>
+                <observers>
+                    <enterprise_pbridge>
+                        <class>enterprise_pbridge/observer</class>
+                        <method>isPaymentMethodAvailable</method>
+                    </enterprise_pbridge>
+                </observers>
+            </payment_method_is_active>
+        </events>
+    </global>
+    <frontend>
+        <secure_url>
+            <enterprise_pbridge_pbridge>/enterprise_pbridge/pbridge/</enterprise_pbridge_pbridge>
+        </secure_url>
+        <routers>
+            <enterprise_pbridge>
+                <use>standard</use>
+                <args>
+                    <module>Enterprise_Pbridge</module>
+                    <frontName>enterprise_pbridge</frontName>
+                </args>
+            </enterprise_pbridge>
+        </routers>
+        <translate>
+            <modules>
+                <Enterprise_Pbridge>
+                    <files>
+                        <default>Enterprise_Pbridge.csv</default>
+                    </files>
+                </Enterprise_Pbridge>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <enterprise_pbridge>
+                    <file>pbridge.xml</file>
+                </enterprise_pbridge>
+            </updates>
+        </layout>
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <enterprise_pbridge>
+                    <file>enterprise/pbridge.xml</file>
+                </enterprise_pbridge>
+            </updates>
+        </layout>
+        <events>
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <enterprise_pbridge>
+                        <class>enterprise_pbridge/observer</class>
+                        <method>updatePaymentProfileStatus</method>
+                    </enterprise_pbridge>
+                </observers>
+            </admin_system_config_changed_section_payment>
+        </events>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Enterprise_Pbridge after="Mage_Adminhtml">Enterprise_Pbridge_Adminhtml</Enterprise_Pbridge>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <default>
+        <payment>
+            <pbridge translate="title" module="enterprise_pbridge">
+                <model>enterprise_pbridge/payment_method_pbridge</model>
+                <title>Payment Bridge</title>
+                <debug>0</debug>
+            </pbridge>
+            <pbridge_paypal_direct>
+                <model>enterprise_pbridge/payment_method_paypal</model>
+                <active>1</active>
+            </pbridge_paypal_direct>
+            <pbridge_paypaluk_direct>
+                <model>enterprise_pbridge/payment_method_paypaluk</model>
+                <active>1</active>
+            </pbridge_paypaluk_direct>
+            <pbridge_authorizenet>
+                <model>enterprise_pbridge/payment_method_authorizenet</model>
+                <enabled>1</enabled>
+            </pbridge_authorizenet>
+            <pbridge_eway_direct>
+                <model>enterprise_pbridge/payment_method_eway_direct</model>
+                <active>1</active>
+            </pbridge_eway_direct>
+            <pbridge_verisign>
+                <model>enterprise_pbridge/payment_method_payflow_pro</model>
+                <enabled>1</enabled>
+            </pbridge_verisign>
+            <pbridge_ogone_direct>
+                <model>enterprise_pbridge/payment_method_ogone</model>
+                <title>Ogone Direct Link</title>
+                <userid backend_model="adminhtml/system_config_backend_encrypted"/>
+                <password backend_model="adminhtml/system_config_backend_encrypted"/>
+                <passphrase backend_model="adminhtml/system_config_backend_encrypted"/>
+                <payment_action>authorize</payment_action>
+                <useccv>1</useccv>
+            </pbridge_ogone_direct>
+            <pbridge_paybox_direct>
+                <model>enterprise_pbridge/payment_method_paybox_direct</model>
+                <active>1</active>
+            </pbridge_paybox_direct>
+            <cybersource_soap>
+                <payment_action>authorize</payment_action>
+                <title>Credit Card (Cybersource)</title>
+            </cybersource_soap>
+            <pbridge_cybersource_soap>
+                <model>enterprise_pbridge/payment_method_cybersource_soap</model>
+            </pbridge_cybersource_soap>
+            <braintree_basic>
+                <model>enterprise_pbridge/payment_method_braintree_basic</model>
+                <title>Braintree</title>
+                <payment_action>authorize</payment_action>
+                <using_pbridge>1</using_pbridge>
+            </braintree_basic>
+            <firstdata>
+                <title>First Data Global Gateway</title>
+                <currency>USD</currency>
+                <using_pbridge>1</using_pbridge>
+                <model>enterprise_pbridge/payment_method_firstdata</model>
+            </firstdata>
+            <eway_direct>
+                <title>eWAY Direct</title>
+                <using_pbridge>1</using_pbridge>
+                <payment_action>authorize_capture</payment_action>
+            </eway_direct>
+            <payone_gate>
+                <title>Credit Card (Payone.de)</title>
+                <model>enterprise_pbridge/payment_method_payone_gate</model>
+                <currency>EUR</currency>
+                <using_pbridge>1</using_pbridge>
+            </payone_gate>
+            <paybox_direct>
+                <payment_action>authorize</payment_action>
+                <title>Paybox Direct</title>
+                <using_pbridge>1</using_pbridge>
+            </paybox_direct>
+        </payment>
+    </default>
+</config>
