@@ -52,6 +52,8 @@ class Enterprise_PageCache_Model_Observer
      */
     protected $_config;
 
+    public $isCachingPossibleForThisRequest = false;
+
     /**
      * Is Enabled Full Page Cache
      *
@@ -124,7 +126,8 @@ class Enterprise_PageCache_Model_Observer
          * Check if request will be cached
          */
         if ($this->_processor->canProcessRequest($request) && $this->_processor->getRequestProcessor($request)) {
-            Mage::app()->getCacheInstance()->banUse(Mage_Core_Block_Abstract::CACHE_GROUP); // disable blocks cache
+            $this->isCachingPossibleForThisRequest = true;
+            //Mage::app()->getCacheInstance()->banUse(Mage_Core_Block_Abstract::CACHE_GROUP); // disable blocks cache
         }
         $this->_getCookie()->updateCustomerCookies();
         return $this;
@@ -165,7 +168,7 @@ class Enterprise_PageCache_Model_Observer
         }
         $object = $observer->getEvent()->getObject();
         if ($object && $object->getId()) {
-            $tags = $object->getCacheIdTags();
+            $tags = $object->getCacheTags();
             if ($tags) {
                 $this->_processor->addRequestTag($tags);
             }
@@ -188,10 +191,10 @@ class Enterprise_PageCache_Model_Observer
         /**
          * Categories with category event can't be cached
          */
-        if ($category && $category->getEvent()) {
-            $request = $observer->getEvent()->getControllerAction()->getRequest();
-            $request->setParam('no_cache', true);
-        }
+//        if ($category && $category->getEvent()) {
+//            $request = $observer->getEvent()->getControllerAction()->getRequest();
+//            $request->setParam('no_cache', false);
+//        }
         return $this;
     }
 
@@ -210,10 +213,10 @@ class Enterprise_PageCache_Model_Observer
         /**
          * Categories with category event can't be cached
          */
-        if ($product && $product->getEvent()) {
-            $request = $observer->getEvent()->getControllerAction()->getRequest();
-            $request->setParam('no_cache', true);
-        }
+//        if ($product && $product->getEvent()) {
+//            $request = $observer->getEvent()->getControllerAction()->getRequest();
+//            $request->setParam('no_cache', true);
+//        }
         return $this;
     }
 
@@ -449,7 +452,7 @@ class Enterprise_PageCache_Model_Observer
             return $this;
         }
         $this->_getCookie()->updateCustomerCookies();
-        $this->updateCustomerProductIndex();
+//        $this->updateCustomerProductIndex();
         return $this;
     }
 

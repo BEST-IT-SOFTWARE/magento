@@ -122,6 +122,48 @@
                         <ideal_basic_notify/>
                         <authorizenet_directpost_payment_response/>
                         <enterprise_pbridge_PbridgeIpn_index/>
+                        <contacts_index_index/>
+                        <contacts_index_post/>
+                        <wordpress_default/>
+                        <wordpress_index_index/> 
+                        <wordpress_homepage_index/>
+                        <wordpress_category_index/> 
+                        <wordpress_post_list_index/> 
+                        <wordpress_search_index/> 
+                        <wordpress_post_view_comment_post/> 
+                        <wordpress_tag_index/> 
+                        <wordpress_archive_view_index/> 
+                        <wordpress_tag_list/> 
+                        <wordpress_author_index/> 
+                        <wordpress_post_view_index/> 
+                        <wordpress_page_view_index/> 
+                        <wordpress_misc_rss/>
+                        <deal_index_index/> 
+                        <currentevents_index_index/> 
+                        <press_index_index/> 
+                        <fbintegrator_facebook_connect/>
+                        <criteo_index_index/>
+                        <unsubscribe_unsubscribe_index />
+                        <unsubscribe_unsubscribe_save />
+                        <unsubscribe_unsubscribe_unsubscribe />
+                        <faqs_index_index />
+                        <brand_index_index/>
+                        <brand_index_view/>
+                        <PRODUCT_TYPE_simple />
+                        <PRODUCT_TYPE_configurable />
+                        <PRODUCT_TYPE_grouped />
+                        <PRODUCT_TYPE_virtual />
+                        <catalog_product_view />
+                        <catalog_category_view />
+                        <survey_survey_view />
+                        <survey_survey_question />
+                        <survey_survey_edit />
+                        <survey_survey_finish />
+                        <catalog_category_default />
+                        <catalog_category_layered />
+                        <olark_ticket_create />
+                        <adwords_api_categorydiscounts />
+                        <warehouse_sportpursuit_index/>
                     </generic>
                     <register>
                         <customer_account_create/>

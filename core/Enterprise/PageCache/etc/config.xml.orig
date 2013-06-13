@@ -21,26 +21,25 @@
  *
  * @category    Enterprise
  * @package     Enterprise_PageCache
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 -->
 <config>
     <modules>
         <Enterprise_PageCache>
-            <version>1.11.0.0</version>
+             <version>1.6.0.0.0</version>
         </Enterprise_PageCache>
     </modules>
     <global>
         <models>
             <enterprise_pagecache>
                 <class>Enterprise_PageCache_Model</class>
-                <resourceModel>enterprise_pagecache_resource</resourceModel>
+                <resourceModel>enterprise_pagecache_mysql4</resourceModel>
             </enterprise_pagecache>
-            <enterprise_pagecache_resource>
-                <class>Enterprise_PageCache_Model_Resource</class>
-                <deprecatedNode>enterprise_pagecache_mysql4</deprecatedNode>
-            </enterprise_pagecache_resource>
+            <enterprise_pagecache_mysql4>
+                <class>Enterprise_PageCache_Model_Mysql4</class>
+            </enterprise_pagecache_mysql4>
         </models>
         <blocks>
             <enterprise_pagecache>
@@ -54,9 +53,7 @@
         </helpers>
         <resources>
             <enterprise_pagecache_setup>
-                <setup>
-                    <module>Enterprise_PageCache</module>
-                </setup>
+                <setup><module>Enterprise_PageCache</module></setup>
             </enterprise_pagecache_setup>
         </resources>
         <cache>
@@ -76,16 +73,6 @@
                 <full_page/>
             </related_cache_types>
         </widget>
-        <events>
-            <core_clean_cache>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>cleanExpiredCache</method>
-                    </enterprise_pagecache>
-                </observers>
-            </core_clean_cache>
-        </events>
     </global>
     <adminhtml>
         <events>
@@ -121,14 +108,6 @@
                     </enterprise_pagecache>
                 </observers>
             </model_delete_commit_after>
-            <controller_action_postdispatch_adminhtml_system_currency_saveRates>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>invalidateCache</method>
-                    </enterprise_pagecache>
-                </observers>
-            </controller_action_postdispatch_adminhtml_system_currency_saveRates>
             <controller_action_postdispatch_adminhtml_system_config_save>
                 <observers>
                     <enterprise_pagecache>
@@ -153,19 +132,11 @@
                     </enterprise_pagecache>
                 </observers>
             </controller_action_postdispatch_adminhtml_catalog_product_massStatus>
-            <controller_action_postdispatch_adminhtml_system_currencysymbol_save>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>invalidateCache</method>
-                    </enterprise_pagecache>
-                </observers>
-            </controller_action_postdispatch_adminhtml_system_currencysymbol_save>
             <catalogrule_after_apply>
                 <observers>
                     <enterprise_pagecache>
                         <class>enterprise_pagecache/observer</class>
-                        <method>invalidateCache</method>
+                        <method>cleanCache</method>
                     </enterprise_pagecache>
                 </observers>
             </catalogrule_after_apply>
@@ -177,14 +148,6 @@
                     </enterprise_pagecache>
                 </observers>
             </core_config_backend_design_exception_save_after>
-            <adminhtml_system_config_backend_cookie_save_after>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>invalidateCache</method>
-                    </enterprise_pagecache>
-                </observers>
-            </adminhtml_system_config_backend_cookie_save_after>
             <adminhtml_cache_refresh_type>
                 <observers>
                     <enterprise_pagecache>
@@ -222,14 +185,6 @@
             </enterprise_pagecache>
         </routers>
         <events>
-            <controller_response_redirect>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>checkMessages</method>
-                    </enterprise_pagecache>
-                </observers>
-            </controller_response_redirect>
             <model_load_after>
                 <observers>
                     <enterprise_pagecache>
@@ -284,20 +239,16 @@
                         <class>enterprise_pagecache/observer</class>
                         <method>customerLogin</method>
                     </enterprise_pagecache>
-                    <enterprise_pagecache_compare_list_change>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>registerCompareListChange</method>
-                    </enterprise_pagecache_compare_list_change>
                 </observers>
             </customer_login>
-            <controller_action_postdispatch_customer_account_logoutSuccess>
+            <customer_logout>
                 <observers>
                     <enterprise_pagecache>
                         <class>enterprise_pagecache/observer</class>
                         <method>customerLogout</method>
                     </enterprise_pagecache>
                 </observers>
-            </controller_action_postdispatch_customer_account_logoutSuccess>
+            </customer_logout>
             <sales_quote_save_after>
                 <observers>
                     <enterprise_pagecache>
@@ -378,47 +329,19 @@
                     </enterprise_pagecache>
                 </observers>
             </sales_order_place_after>
-            <poll_vote_add>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>registerPollChange</method>
-                    </enterprise_pagecache>
-                </observers>
-            </poll_vote_add>
-            <catalog_controller_product_init_before>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>updateProductInfo</method>
-                    </enterprise_pagecache>
-                </observers>
-            </catalog_controller_product_init_before>
-            <enterprise_customersegment_ids_changed>
-                <observers>
-                    <enterprise_pagecache>
-                        <class>enterprise_pagecache/observer</class>
-                        <method>changedCustomerSegmentIds</method>
-                    </enterprise_pagecache>
-                </observers>
-            </enterprise_customersegment_ids_changed>
+
         </events>
         <cache>
             <requests>
+                <!--
+                    Supported definitions:
+                    <module_front_name>processor_model</module_front_name> - all module urls
+                    <module_front_name><controller>processor_model</controller></module_front_name> - all module controller actions
+                    <module_front_name><controller><action>processor_model</action></controller></module_front_name> - specific action
+                 -->
                 <cms>enterprise_pagecache/processor_default</cms>
-                <catalog>
-                    <category>
-                        <view>enterprise_pagecache/processor_category</view>
-                    </category>
-                </catalog>
-                <catalog>
-                    <product>
-                        <view>enterprise_pagecache/processor_product</view>
-                    </product>
-                </catalog>
-                <core>
-                	<index>enterprise_pagecache/processor_default</index>
-                </core>
+                <catalog><category><view>enterprise_pagecache/processor_category</view></category></catalog>
+                <catalog><product><view>enterprise_pagecache/processor_product</view></product></catalog>
             </requests>
         </cache>
     </frontend>
@@ -427,7 +350,6 @@
             <page_cache>
                 <allowed_depth>1</allowed_depth>
                 <multicurrency>1</multicurrency>
-                <max_cache_size>1024</max_cache_size>
             </page_cache>
             <page_crawl>
                 <enable>0</enable>
@@ -435,7 +357,7 @@
                 <multicurrency>1</multicurrency>
             </page_crawl>
         </system>
-
+        
         <dev>
             <translate_inline>
                 <invalid_caches>
@@ -444,16 +366,12 @@
             </translate_inline>
         </dev>
     </default>
-    <!--<crontab>
+    <crontab>
         <jobs>
             <enterprise_page_cache_crawler>
-                <schedule>
-                    <cron_expr>0 3 * * *</cron_expr>
-                </schedule>
-                <run>
-                    <model>enterprise_pagecache/crawler::crawl</model>
-                </run>
+                <schedule><cron_expr>0 3 * * *</cron_expr></schedule>
+                <run><model>enterprise_pagecache/crawler::crawl</model></run>
             </enterprise_page_cache_crawler>
         </jobs>
- 	</crontab>-->
+    </crontab>
 </config>

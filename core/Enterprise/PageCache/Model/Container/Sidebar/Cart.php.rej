@@ -1,0 +1,45 @@
+--- app/code/core/Enterprise/PageCache/Model/Container/Sidebar/Cart.php	(revision 72546)
++++ app/code/core/Enterprise/PageCache/Model/Container/Sidebar/Cart.php	(revision )
+@@ -27,7 +27,7 @@
+ /**
+  * Cart sidebar container
+  */
+-class Enterprise_PageCache_Model_Container_Sidebar_Cart extends Enterprise_PageCache_Model_Container_Abstract
++class Enterprise_PageCache_Model_Container_Sidebar_Cart extends Enterprise_PageCache_Model_Container_Advanced_Abstract
+ {
+     const CACHE_TAG_PREFIX = 'cartsidebar';
+ 
+@@ -49,7 +49,7 @@
+      */
+     protected function _getCacheId()
+     {
+-        return 'CONTAINER_SIDEBAR_' . md5($this->_placeholder->getAttribute('cache_id') . $this->_getIdentifier());
++        return md5(self::CACHE_TAG_PREFIX . $this->_getIdentifier());
+     }
+ 
+     /**
+@@ -70,18 +70,12 @@
+     }
+ 
+     /**
+-     * Save rendered block content to cache storage
++     * Get container individual additional cache id
+      *
+-     * @param string $blockContent
+-     * @return Enterprise_PageCache_Model_Container_Abstract
++     * @return string | false
+      */
+-    public function saveCache($blockContent)
++    protected function _getAdditionalCacheId()
+     {
+-        $cacheId = $this->_getCacheId();
+-        if ($cacheId !== false) {
+-            $cacheTag = md5(self::CACHE_TAG_PREFIX . $this->_getIdentifier());
+-            $this->_saveCache($blockContent, $cacheId, array($cacheTag));
+-        }
+-        return $this;
+-    }
+-}
++        return md5('CONTAINER_SIDEBAR_' . $this->_placeholder->getAttribute('cache_id'));
++    }
++}

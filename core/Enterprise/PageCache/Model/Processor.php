@@ -120,27 +120,33 @@ class Enterprise_PageCache_Model_Processor
          */
         if ($uri) {
             if (isset($_COOKIE['store'])) {
-                $uri = $uri.'_'.$_COOKIE['store'];
+                $uri = $uri.'_ST'.$_COOKIE['store'];
             }
             if (isset($_COOKIE['currency'])) {
-                $uri = $uri.'_'.$_COOKIE['currency'];
+                $uri = $uri.'_CR'.$_COOKIE['currency'];
             }
             if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_GROUP])) {
-                $uri .= '_' . $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_GROUP];
+                $uri .= '_GR' . $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_GROUP];
             }
             if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_LOGGED_IN])) {
-                $uri .= '_' . $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_LOGGED_IN];
+                $uri .= '_LI' . $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_LOGGED_IN];
             }
-            if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::CUSTOMER_SEGMENT_IDS])) {
-                $uri .= '_' . $_COOKIE[Enterprise_PageCache_Model_Cookie::CUSTOMER_SEGMENT_IDS];
+            if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_GENDER])) {
+                $uri .= '_GN' . $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_GENDER];
             }
+            if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_TAX_GROUP])) {
+                $uri .= '_TG' . $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER_TAX_GROUP];
+            }
+//            if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::CUSTOMER_SEGMENT_IDS])) {
+//                $uri .= '_' . $_COOKIE[Enterprise_PageCache_Model_Cookie::CUSTOMER_SEGMENT_IDS];
+//            }
             if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::IS_USER_ALLOWED_SAVE_COOKIE])) {
-                $uri .= '_' . $_COOKIE[Enterprise_PageCache_Model_Cookie::IS_USER_ALLOWED_SAVE_COOKIE];
+                $uri .= '_SC' . $_COOKIE[Enterprise_PageCache_Model_Cookie::IS_USER_ALLOWED_SAVE_COOKIE];
             }
             $designPackage = $this->_getDesignPackage();
 
             if ($designPackage) {
-                $uri .= '_' . $designPackage;
+                $uri .= '_DP' . $designPackage;
             }
         }
 
@@ -497,10 +503,18 @@ class Enterprise_PageCache_Model_Processor
          */
         if ($this->canProcessRequest($request)) {
             $processor = $this->getRequestProcessor($request);
-            if ($processor && $processor->allowCache($request)) {
+
+            $headers = $response->getHeaders();
+            $is_redirect = false;
+            foreach($headers as $val){
+                $is_redirect |= $val["name"]=="Location";
+            }
+
+            if ($processor && $processor->allowCache($request) && !$is_redirect) {
                 $this->setMetadata('cache_subprocessor', get_class($processor));
 
                 $cacheId = $this->prepareCacheId($processor->getPageIdInApp($this));
+
                 $content = $processor->prepareContent($response);
 
                 /**
@@ -512,23 +526,23 @@ class Enterprise_PageCache_Model_Processor
                     $content = gzcompress($content);
                 }
 
-                $contentSize = strlen($content);
-                $currentStorageSize = (int) $cacheInstance->load(self::CACHE_SIZE_KEY);
-
-                $maxSizeInBytes = Mage::getStoreConfig(self::XML_PATH_CACHE_MAX_SIZE) * 1024 * 1024;
-
-                if ($currentStorageSize >= $maxSizeInBytes) {
-                    Mage::app()->getCacheInstance()->invalidateType('full_page');
-                    return $this;
-                }
+//                $contentSize = strlen($content);
+//                $currentStorageSize = (int) $cacheInstance->load(self::CACHE_SIZE_KEY);
+//
+//                $maxSizeInBytes = Mage::getStoreConfig(self::XML_PATH_CACHE_MAX_SIZE) * 1024 * 1024;
+//
+//                if ($currentStorageSize >= $maxSizeInBytes) {
+//                    Mage::app()->getCacheInstance()->invalidateType('full_page');
+//                    return $this;
+//                }
 
                 $cacheInstance->save($content, $cacheId, $this->getRequestTags());
 
-                $cacheInstance->save(
-                    $currentStorageSize + $contentSize,
-                    self::CACHE_SIZE_KEY,
-                    $this->getRequestTags()
-                );
+//                $cacheInstance->save(
+//                    $currentStorageSize + $contentSize,
+//                    self::CACHE_SIZE_KEY,
+//                    $this->getRequestTags()
+//                );
 
                 /*
                  * Save design change in cache
@@ -564,6 +578,8 @@ class Enterprise_PageCache_Model_Processor
                 Mage::getModel('enterprise_pagecache/observer')->updateCustomerProductIndex();
 
             }
+        } else {
+            $response->setNoCache();
         }
         return $this;
     }

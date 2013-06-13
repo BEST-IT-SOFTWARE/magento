@@ -125,6 +125,12 @@ class Enterprise_CatalogEvent_Block_Adminhtml_Event_Grid extends Mage_Adminhtml_
             )
         ));
 
+        $this->addColumn('discount_percent', array(
+            'header' => Mage::helper('enterprise_catalogevent')->__('Discount Percent'),
+            'index' => 'discount_percent',
+            'width' => 70
+        ));
+        
         $this->addColumn('sort_order', array(
             'header' => Mage::helper('enterprise_catalogevent')->__('Sort Order'),
             'index' => 'sort_order',

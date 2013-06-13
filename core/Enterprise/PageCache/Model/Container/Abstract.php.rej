@@ -1,0 +1,20 @@
+--- app/code/core/Enterprise/PageCache/Model/Container/Abstract.php	(revision 78722)
++++ app/code/core/Enterprise/PageCache/Model/Container/Abstract.php	(revision )
+@@ -146,7 +146,7 @@
+      */
+     protected function _loadCache($id)
+     {
+-        return Mage::app()->getCache()->load($id);
++        return Enterprise_PageCache_Model_Cache::getCacheInstance()->load($id);
+     }
+ 
+     /**
+@@ -169,7 +169,7 @@
+          */
+         Enterprise_PageCache_Helper_Url::replaceSid($data);
+ 
+-        Mage::app()->getCache()->save($data, $id, $tags, $lifetime);
++        Enterprise_PageCache_Model_Cache::getCacheInstance()->save($data, $id, $tags, $lifetime);
+         return $this;
+     }
+ 

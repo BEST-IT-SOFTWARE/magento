@@ -152,7 +152,7 @@ class Enterprise_CatalogEvent_Model_Observer
         $event = $observer->getEvent()->getProduct()->getEvent();
         if ($event && in_array($event->getStatus(), array(
                     Enterprise_CatalogEvent_Model_Event::STATUS_CLOSED,
-                    Enterprise_CatalogEvent_Model_Event::STATUS_UPCOMING
+//                    Enterprise_CatalogEvent_Model_Event::STATUS_UPCOMING
         ))) {
             $observer->getEvent()->getSalable()->setIsSalable(false);
         }
@@ -200,6 +200,9 @@ class Enterprise_CatalogEvent_Model_Observer
             $quoteItem->setEventId($product->getEvent()->getId());
             if ($quoteItem->getParentItem()) {
                 $quoteItem->getParentItem()->setEventId($quoteItem->getEventId());
+                foreach($quoteItem->getParentItem()->getChildren() as $child){
+                    $child->setEventId($quoteItem->getEventId());
+                }
             }
         }
     }
@@ -225,7 +228,13 @@ class Enterprise_CatalogEvent_Model_Observer
 
         if ($item->getEventId()) {
             if ($event = $item->getEvent()) {
-                if ($event->getStatus() !== Enterprise_CatalogEvent_Model_Event::STATUS_OPEN) {
+                $product = $item->getProduct();
+                $parentIds = $product->getTypeInstance(true)->getParentIdsByChild($product->getId());
+                $product = $parentIds ? Mage::getModel('catalog/product')->load($parentIds[0]) : $product;
+                $categoryIds = $product->getCategoryIds();
+                $warehouseCat = Mage::getStoreConfig("sputilities/spcategories/spwarehousecatid");
+
+                if ($event->getStatus() !== Enterprise_CatalogEvent_Model_Event::STATUS_OPEN && in_array($warehouseCat, $categoryIds) === 0) {
                     $item->setHasError(true)
                         ->setMessage(
                             Mage::helper('enterprise_catalogevent')->__('Sale was closed for this product.')
@@ -348,15 +357,22 @@ class Enterprise_CatalogEvent_Model_Observer
      */
     protected function _getEventCollection(array $categoryIds = null)
     {
-        $collection = Mage::getModel('enterprise_catalogevent/event')->getCollection();
-        if ($categoryIds !== null) {
-            $collection->addFieldToFilter('category_id',
-                array(
-                    'in' => $categoryIds
-                ));
+        if ($categoryIds){
+            $categories = implode(",", array_unique($categoryIds));
+        } else {
+            $categories="";
         }
-
-        return $collection;
+        if (!isset($this->events_forCategories[$categories])){
+            $collection = Mage::getModel('enterprise_catalogevent/event')->getCollection();
+            if ($categoryIds !== null) {
+                $collection->addFieldToFilter('category_id',
+                    array(
+                        'in' => $categoryIds
+                    ));
+            }
+            $this->events_forCategories[$categories] = $collection;
+        }
+        return $this->events_forCategories[$categories];
     }
 
     /**

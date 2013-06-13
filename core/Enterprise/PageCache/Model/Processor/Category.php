@@ -126,6 +126,8 @@ class Enterprise_PageCache_Model_Processor_Category extends Enterprise_PageCache
                 $params[$queryParam] = $data[$sessionParam];
             }
         }
+//        $params["gender"]="male";
+//        $params["tax_percent"]="20";
         return $params;
     }
 

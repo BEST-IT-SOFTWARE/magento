@@ -163,10 +163,10 @@ class Enterprise_CatalogPermissions_Model_Adminhtml_Observer
                     Enterprise_CatalogPermissions_Model_Permission_Index::EVENT_TYPE_REINDEX_PRODUCTS
                 );
             }
-            $indexer->indexEvents(
-                Enterprise_CatalogPermissions_Model_Permission_Index::ENTITY_PRODUCT,
-                Enterprise_CatalogPermissions_Model_Permission_Index::EVENT_TYPE_REINDEX_PRODUCTS
-            );
+//            $indexer->indexEvents(
+//                Enterprise_CatalogPermissions_Model_Permission_Index::ENTITY_PRODUCT,
+//                Enterprise_CatalogPermissions_Model_Permission_Index::EVENT_TYPE_REINDEX_PRODUCTS
+//            );
             $this->_indexProductQueue = array();
         }
 

@@ -37,6 +37,8 @@ class Enterprise_PageCache_Model_Cookie extends Mage_Core_Model_Cookie
      * Cookie names
      */
     const COOKIE_CUSTOMER           = 'CUSTOMER';
+    const COOKIE_CUSTOMER_TAX_GROUP = 'CUSTOMER_GENDER';
+    const COOKIE_CUSTOMER_GENDER    = 'CUSTOMER_TAX_GROUP';
     const COOKIE_CUSTOMER_GROUP     = 'CUSTOMER_INFO';
 
     const COOKIE_MESSAGE            = 'NEWMESSAGE';
@@ -87,7 +89,7 @@ class Enterprise_PageCache_Model_Cookie extends Mage_Core_Model_Cookie
             $saltCacheId = 'full_page_cache_key';
             $this->_salt = Enterprise_PageCache_Model_Cache::getCacheInstance()->load($saltCacheId);
             if (!$this->_salt) {
-                $this->_salt = md5(microtime() . rand());
+                $this->_salt = "md5(microtime() . rand());";
                 Enterprise_PageCache_Model_Cache::getCacheInstance()->save($this->_salt, $saltCacheId,
                     array(Enterprise_PageCache_Model_Processor::CACHE_TAG));
             }
@@ -110,8 +112,13 @@ class Enterprise_PageCache_Model_Cookie extends Mage_Core_Model_Cookie
     public function setObscure(
         $name, $value, $period = null, $path = null, $domain = null, $secure = null, $httponly = null
     ) {
-        $value = md5($this->_getSalt() . $value);
+        $value = $this->obscure($value);
         return $this->set($name, $value, $period, $path, $domain, $secure, $httponly);
+    }
+    public function obscure(
+        $value
+    ) {
+        return md5($this->_getSalt() . $value);
     }
 
     /**
@@ -140,6 +147,9 @@ class Enterprise_PageCache_Model_Cookie extends Mage_Core_Model_Cookie
             $this->setObscure(self::COOKIE_CUSTOMER_GROUP, 'customer_group_' . $customerGroupId);
             if ($session->isLoggedIn()) {
                 $this->setObscure(self::COOKIE_CUSTOMER_LOGGED_IN, 'customer_logged_in_' . $session->isLoggedIn());
+                $catalog_session   = Mage::getSingleton('catalog/session');
+                $this->setObscure(self::COOKIE_CUSTOMER_GENDER, 'customer_gender_' . $catalog_session->getGender());
+                $this->setObscure(self::COOKIE_CUSTOMER_TAX_GROUP, 'customer_tax_group_' . $catalog_session->getTaxRate());
             } else {
                 $this->delete(self::COOKIE_CUSTOMER_LOGGED_IN);
             }
@@ -147,6 +157,8 @@ class Enterprise_PageCache_Model_Cookie extends Mage_Core_Model_Cookie
             $this->delete(self::COOKIE_CUSTOMER);
             $this->delete(self::COOKIE_CUSTOMER_GROUP);
             $this->delete(self::COOKIE_CUSTOMER_LOGGED_IN);
+            $this->delete(self::COOKIE_CUSTOMER_GENDER);
+            $this->delete(self::COOKIE_CUSTOMER_TAX_GROUP);
         }
         return $this;
     }

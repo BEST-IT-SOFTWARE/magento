@@ -158,8 +158,10 @@ class Enterprise_CatalogEvent_Adminhtml_Catalog_EventController extends Mage_Adm
 
         $event->setDisplayState($data->getDisplayState())
             ->setStoreDateStart($data->getDateStart())
+            ->setDiscountPercent($data->getDiscountPercent())
             ->setStoreDateEnd($data->getDateEnd())
-            ->setSortOrder($data->getSortOrder());
+            ->setSortOrder($data->getSortOrder())
+            ->setFeaturedEvent($data->getFeaturedEvent());
 
         $isUploaded = true;
         try {
@@ -170,6 +172,36 @@ class Enterprise_CatalogEvent_Adminhtml_Catalog_EventController extends Mage_Adm
             $uploader->setFilesDispersion(false);
         } catch (Exception $e) {
             $isUploaded = false;
+        }
+        $isBigUploaded = true;
+        try {
+            $big_uploader = new Mage_Core_Model_File_Uploader('bigimage');
+            $big_uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+            $big_uploader->setAllowRenameFiles(true);
+            $big_uploader->setAllowCreateFolders(true);
+            $big_uploader->setFilesDispersion(false);
+        } catch (Exception $e) {
+            $isBigUploaded = false;
+        }
+        $isFemUploaded = true;
+        try {
+            $fem_uploader = new Mage_Core_Model_File_Uploader('image_female');
+            $fem_uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+            $fem_uploader->setAllowRenameFiles(true);
+            $fem_uploader->setAllowCreateFolders(true);
+            $fem_uploader->setFilesDispersion(false);
+        } catch (Exception $e) {
+            $isFemUploaded = false;
+        }
+        $isBigFemUploaded = true;
+        try {
+            $bigfem_uploader = new Mage_Core_Model_File_Uploader('bigimage_female');
+            $bigfem_uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+            $bigfem_uploader->setAllowRenameFiles(true);
+            $bigfem_uploader->setAllowCreateFolders(true);
+            $bigfem_uploader->setFilesDispersion(false);
+        } catch (Exception $e) {
+            $isBigFemUploaded = false;
         }
 
         $validateResult = $event->validate();
@@ -193,6 +225,45 @@ class Enterprise_CatalogEvent_Adminhtml_Catalog_EventController extends Mage_Adm
                 } catch (Exception $e) {
                     Mage::throwException(
                         Mage::helper('enterprise_catalogevent')->__('Image was not uploaded.')
+                    );
+                }
+            }
+            if ($data->getData('bigimage/is_default')) {
+                $event->setBigimage(null);
+            } elseif ($data->getData('bigimage/delete')) {
+                $event->setBigimage('');
+            } elseif ($isBigUploaded) {
+                try {
+                    $event->setBigimage($big_uploader);
+                } catch (Exception $e) {
+                    Mage::throwException(
+                        Mage::helper('enterprise_catalogevent')->__('Big Image was not uploaded.')
+                    );
+                }
+            }
+            if ($data->getData('image_female/is_default')) {
+                $event->setImageFemale(null);
+            } elseif ($data->getData('image_female/delete')) {
+                $event->setImageFemale('');
+            } elseif ($isFemUploaded) {
+                try {
+                    $event->setImageFemale($fem_uploader);
+                } catch (Exception $e) {
+                    Mage::throwException(
+                        Mage::helper('enterprise_catalogevent')->__('Female Image was not uploaded.')
+                    );
+                }
+            }
+            if ($data->getData('bigimage_female/is_default')) {
+                $event->setBigimageFemale(null);
+            } elseif ($data->getData('bigimage_female/delete')) {
+                $event->setBigimageFemale('');
+            } elseif ($isBigFemUploaded) {
+                try {
+                    $event->setBigimageFemale($bigfem_uploader);
+                } catch (Exception $e) {
+                    Mage::throwException(
+                        Mage::helper('enterprise_catalogevent')->__('Big Female Image was not uploaded.')
                     );
                 }
             }
@@ -280,5 +351,35 @@ class Enterprise_CatalogEvent_Adminhtml_Catalog_EventController extends Mage_Adm
         }
         return $data;
     }
-
+    public function discountAction()
+    {
+        $event = Mage::getModel('enterprise_catalogevent/event');
+        /* @var $event Enterprise_CatalogEvent_Model_Event */
+        $eventId = $this->getRequest()->getParam('id', false);
+        $event->load($eventId);
+        $max_discount = 0;
+        $category = Mage::getModel("catalog/category")->load($event->getCategoryId());
+        $products = $category->getProductCollection()->addAttributeToSelect(array("pct_discount"));
+        $no_price  = array();
+        foreach($products as $product){
+            $discount = $product->getPctDiscount();
+            if ($discount){
+                $discount = str_replace("%", "", $discount);
+                $max_discount = max($max_discount, $discount);
+            } else {
+                $no_price[]=$product->getSku();
+            }
+        }
+        if (count($no_price)){
+            Mage::getModel("adminhtml/session")->addError(
+                    sprintf("Products %s did not have discount", 
+                            implode(",", $no_price)));
+        } else {
+            Mage::getModel("adminhtml/session")->addNotice(
+                    sprintf("Discount of %s calculated correctly", 
+                            $max_discount));
+        }
+        $event->setDiscountPercent($max_discount)->save();
+        $this->_redirect('*/*/edit', array('_current' => true, 'id' => $event->getId()));
+    }
 }

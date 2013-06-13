@@ -1,0 +1,55 @@
+--- app/code/core/Enterprise/PageCache/Model/Container/Orders.php	(revision 72546)
++++ app/code/core/Enterprise/PageCache/Model/Container/Orders.php	(revision )
+@@ -27,7 +27,7 @@
+ /**
+  * Orders container
+  */
+-class Enterprise_PageCache_Model_Container_Orders extends Enterprise_PageCache_Model_Container_Abstract
++class Enterprise_PageCache_Model_Container_Orders extends Enterprise_PageCache_Model_Container_Advanced_Abstract
+ {
+     const CACHE_TAG_PREFIX = 'orders';
+ 
+@@ -48,10 +48,20 @@
+      */
+     protected function _getCacheId()
+     {
+-        return 'CONTAINER_ORDERS_' . md5($this->_placeholder->getAttribute('cache_id') . $this->_getIdentifier());
++        return md5($this->_getIdentifier());
+     }
+ 
+     /**
++     * Get container individual additional cache id
++     *
++     * @return string | false
++     */
++    protected function _getAdditionalCacheId()
++    {
++        return md5('CONTAINER_ORDERS_' . $this->_placeholder->getAttribute('cache_id'));
++    }
++
++    /**
+      * Render block content
+      *
+      * @return string
+@@ -66,20 +76,4 @@
+ 
+         return $block->toHtml();
+     }
+-
+-    /**
+-     * Save rendered block content to cache storage
+-     *
+-     * @param string $blockContent
+-     * @return Enterprise_PageCache_Model_Container_Abstract
+-     */
+-    public function saveCache($blockContent)
+-    {
+-        $cacheId = $this->_getCacheId();
+-        if ($cacheId !== false) {
+-            $cacheTag = md5(self::CACHE_TAG_PREFIX . $this->_getIdentifier());
+-            $this->_saveCache($blockContent, $cacheId, array($cacheTag));
+-        }
+-        return $this;
+-    }
+-}
++}

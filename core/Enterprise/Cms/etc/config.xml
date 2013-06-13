@@ -139,6 +139,15 @@
                 </observers>
             </cms_page_render>
         </events>
+        <enterprise>
+            <websiterestriction>
+                <full_action_names>
+                    <generic>
+                        <cms_page_view/>
+                    </generic>
+                </full_action_names>
+            </websiterestriction>
+        </enterprise>
     </frontend>
     <adminhtml>
         <layout>

@@ -84,10 +84,10 @@ class Enterprise_TargetRule_Model_Observer
      */
     public function catalogProductSaveCommitAfter(Varien_Event_Observer $observer)
     {
-        Mage::getSingleton('index/indexer')->indexEvents(
-            Enterprise_TargetRule_Model_Index::ENTITY_PRODUCT,
-            Enterprise_TargetRule_Model_Index::EVENT_TYPE_REINDEX_PRODUCTS
-        );
+//        Mage::getSingleton('index/indexer')->indexEvents(
+//            Enterprise_TargetRule_Model_Index::ENTITY_PRODUCT,
+//            Enterprise_TargetRule_Model_Index::EVENT_TYPE_REINDEX_PRODUCTS
+//        );
     }
 
     /**

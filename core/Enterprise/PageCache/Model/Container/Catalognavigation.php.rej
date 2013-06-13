@@ -1,0 +1,11 @@
+--- app/code/core/Enterprise/PageCache/Model/Container/Catalognavigation.php	(revision 72546)
++++ app/code/core/Enterprise/PageCache/Model/Container/Catalognavigation.php	(revision )
+@@ -105,7 +105,7 @@
+                 }
+                 $this->_saveCache($categoryUniqueClasses, $categoryCacheId);
+             }
+-            if (!Mage::app()->getCache()->test($blockCacheId)) {
++            if (!Enterprise_PageCache_Model_Cache::getCacheInstance()->getFrontend()->test($blockCacheId)) {
+                 $this->_saveCache($blockContent, $blockCacheId);
+             }
+         }
