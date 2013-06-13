@@ -389,33 +389,42 @@ class Mage_Catalog_Model_Resource_Layer_Filter_Price extends Mage_Core_Model_Res
      */
     public function applyPriceRange($filter)
     {
-        $interval = $filter->getInterval();
-        if (!$interval) {
-            return $this;
-        }
-
-        list($from, $to) = $interval;
-        if ($from === '' && $to === '') {
-            return $this;
-        }
-
+        $intervals = $filter->getIntervals();
+        if (!$intervals) return;
+        $opts = array();
         $select = $filter->getLayer()->getProductCollection()->getSelect();
         $priceExpr = $this->_getPriceExpression($filter, $select, false);
+        foreach($intervals as $interval){
+            if (!$interval) {
+                return $this;
+            }
 
-        if ($to !== '') {
-            $to = (float)$to;
-            if ($from == $to) {
-                $to += self::MIN_POSSIBLE_PRICE;
+            list($from, $to) = $interval;
+            if ($from === '' && $to === '') {
+                return $this;
+            }
+
+
+            if ($to !== '') {
+                $to = (float)$to;
+                if ($from == $to) {
+                    $to += self::MIN_POSSIBLE_PRICE;
+                }
+            }
+            $opt=array();
+            if ($from !== '') {
+                $opt[] = $priceExpr . ' >= ' . $this->_getComparingValue($from, $filter);
+            }
+            if ($to !== '') {
+                $opt[] = $priceExpr . ' < ' . $this->_getComparingValue($to, $filter);
+            }
+            if (count($opt)>1){ //From and to!
+                $opts[]="(".$opt[0]. " AND ". $opt[1]. ")";
+            } else {
+                $opts[]=$opt[0];
             }
         }
-
-        if ($from !== '') {
-            $select->where($priceExpr . ' >= ' . $this->_getComparingValue($from, $filter));
-        }
-        if ($to !== '') {
-            $select->where($priceExpr . ' < ' . $this->_getComparingValue($to, $filter));
-        }
-
+        $select->where("(".implode("OR",$opts). ")");
         return $this;
 
     }

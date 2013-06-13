@@ -162,7 +162,7 @@ class Mage_ImportExport_Adminhtml_ImportController extends Mage_Adminhtml_Contro
                         } else {
                             if ($import->isImportAllowed()) {
                                 $resultBlock->addNotice(
-                                    $this->__('Please fix errors and re-upload file or simply press "Import" button to skip rows with errors'),
+                                    $this->__('Please fix errors and re-upload file or simply press "Import" button to automatically fix errors'),
                                     true
                                 );
                             } else {

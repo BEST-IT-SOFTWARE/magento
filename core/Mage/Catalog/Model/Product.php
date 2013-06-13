@@ -547,7 +547,8 @@ class Mage_Catalog_Model_Product extends Mage_Catalog_Model_Abstract
 
         $result = parent::_afterSave();
 
-        Mage::getSingleton('index/indexer')->processEntityAction(
+        Mage::getSingleton('index/indexer')->logEvent(
+//        Mage::getSingleton('index/indexer')->processEntityAction(
             $this, self::ENTITY, Mage_Index_Model_Event::TYPE_SAVE
         );
         return $result;

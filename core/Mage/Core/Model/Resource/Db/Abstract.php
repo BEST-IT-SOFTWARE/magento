@@ -361,6 +361,16 @@ abstract class Mage_Core_Model_Resource_Db_Abstract extends Mage_Core_Model_Reso
     }
 
     /**
+     * Temporary resolving collection compatibility
+     *
+     * @return Varien_Db_Adapter_Interface
+     */
+    public function getWriteConnection()
+    {
+        return $this->_getWriteAdapter();
+    }
+
+    /**
      * Load an object
      *
      * @param Mage_Core_Model_Abstract $object

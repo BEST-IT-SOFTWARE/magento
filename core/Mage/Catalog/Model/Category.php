@@ -245,10 +245,10 @@ class Mage_Catalog_Model_Category extends Mage_Catalog_Model_Abstract
         }
         if ($moveComplete) {
             Mage::dispatchEvent('category_move', $eventParams);
-            Mage::getSingleton('index/indexer')->processEntityAction(
+            Mage::getSingleton('index/indexer')->logEvent(
                 $this, self::ENTITY, Mage_Index_Model_Event::TYPE_SAVE
             );
-            Mage::app()->cleanCache(array(self::CACHE_TAG));
+//            Mage::app()->cleanCache(array(self::CACHE_TAG));
         }
 
         return $this;
@@ -941,7 +941,7 @@ class Mage_Catalog_Model_Category extends Mage_Catalog_Model_Abstract
     protected function _afterSave()
     {
         $result = parent::_afterSave();
-        Mage::getSingleton('index/indexer')->processEntityAction(
+        Mage::getSingleton('index/indexer')->logEvent(
             $this, self::ENTITY, Mage_Index_Model_Event::TYPE_SAVE
         );
         return $result;

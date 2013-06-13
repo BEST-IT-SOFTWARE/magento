@@ -358,12 +358,11 @@ class Mage_ImportExport_Model_Import_Entity_Product_Type_Configurable
         $productSuperData = array();
         $productData     = null;
         $nextAttrId      = Mage::getResourceHelper('importexport')->getNextAutoincrement($mainTable);
-
+	ini_set("memory_limit", "2048M");
         if ($this->_entityModel->getBehavior() == Mage_ImportExport_Model_Import::BEHAVIOR_APPEND) {
             $this->_loadSkuSuperData();
         }
         $this->_loadSkuSuperAttributeValues();
-
         while ($bunch = $this->_entityModel->getNextBunch()) {
             $superAttributes = array(
                 'attributes' => array(),

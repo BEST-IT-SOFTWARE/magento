@@ -1277,7 +1277,9 @@ abstract class Mage_Core_Block_Abstract extends Varien_Object
         /** @var $session Mage_Core_Model_Session */
         $session = Mage::getSingleton('core/session');
         $cacheData = Mage::app()->loadCache($cacheKey);
+        $class = get_class($this);
         if ($cacheData) {
+//	    Mage::log("CACHE HIT:". $cacheKey);
             $cacheData = str_replace(
                 $this->_getSidPlaceholder($cacheKey),
                 $session->getSessionIdQueryParam() . '=' . $session->getEncryptedSessionId(),
@@ -1299,8 +1301,11 @@ abstract class Mage_Core_Block_Abstract extends Varien_Object
             return false;
         }
         $cacheKey = $this->getCacheKey();
+
+//	Mage::log("CACHE STOR:". $cacheKey);
         /** @var $session Mage_Core_Model_Session */
         $session = Mage::getSingleton('core/session');
+        $class = get_class($this);
         $data = str_replace(
             $session->getSessionIdQueryParam() . '=' . $session->getEncryptedSessionId(),
             $this->_getSidPlaceholder($cacheKey),

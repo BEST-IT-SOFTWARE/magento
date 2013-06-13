@@ -56,7 +56,7 @@ abstract class Mage_CatalogInventory_Block_Stockqty_Abstract extends Mage_Core_B
         if (!$this->hasData('product_stock_qty')) {
             $qty = 0;
             if ($stockItem = $this->_getProduct()->getStockItem()) {
-                $qty = (float) $stockItem->getStockQty();
+                $qty = (float) $stockItem->getAvailableQty();
             }
             $this->setData('product_stock_qty', $qty);
         }

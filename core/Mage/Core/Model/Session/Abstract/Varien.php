@@ -120,7 +120,7 @@ class Mage_Core_Model_Session_Abstract_Varien extends Varien_Object
             session_cache_limiter((string)$sessionCacheLimiter);
         }
 
-        session_start();
+        @session_start();
 
         /**
         * Renew cookie expiration time if session id did not change

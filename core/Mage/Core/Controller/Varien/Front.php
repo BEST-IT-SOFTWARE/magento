@@ -318,8 +318,9 @@ class Mage_Core_Controller_Varien_Front extends Varien_Object
 
         $uri = @parse_url($baseUrl);
         $requestUri = $request->getRequestUri() ? $request->getRequestUri() : '/';
-        if (isset($uri['scheme']) && $uri['scheme'] != $request->getScheme()
-            || isset($uri['host']) && $uri['host'] != $request->getHttpHost()
+	if (
+	    //isset($uri['scheme']) && $uri['scheme'] != $request->getScheme()
+             isset($uri['host']) && $uri['host'] != $request->getHttpHost()
             || isset($uri['path']) && strpos($requestUri, $uri['path']) === false
         ) {
             Mage::app()->getFrontController()->getResponse()

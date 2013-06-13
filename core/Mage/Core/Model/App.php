@@ -36,6 +36,8 @@
 class Mage_Core_Model_App
 {
 
+    const STORES_CACHE= "STORES_CACHE";
+
     const XML_PATH_INSTALL_DATE = 'global/install/date';
 
     const XML_PATH_SKIP_PROCESS_MODULES_UPDATES = 'global/skip_process_modules_updates';
@@ -831,12 +833,21 @@ class Mage_Core_Model_App
 
         if (empty($this->_stores[$id])) {
             $store = Mage::getModel('core/store');
-            /* @var $store Mage_Core_Model_Store */
-            if (is_numeric($id)) {
-                $store->load($id);
-            } elseif (is_string($id)) {
-                $store->load($id, 'code');
-            }
+            $store_data = Mage::app()->loadCache(self::STORES_CACHE.$id);
+            $store_data=false;
+
+            if (!$store_data){
+                /* @var $store Mage_Core_Model_Store */
+                if (is_numeric($id)) {
+                    $store->load($id);
+                } elseif (is_string($id)) {
+                    $store->load($id, 'code');
+                }
+                $store_data = $store->getData();
+                Mage::app()->saveCache(serialize($store_data), self::STORES_CACHE.$id);
+            } else {
+                $store->setData(unserialize($store_data));
+             }
 
             if (!$store->getCode()) {
                 $this->throwStoreException();

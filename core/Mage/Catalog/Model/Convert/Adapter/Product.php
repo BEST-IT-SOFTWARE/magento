@@ -798,8 +798,15 @@ class Mage_Catalog_Model_Convert_Adapter_Product
             }
         }
 
-        $product->setIsMassupdate(true);
-        $product->setExcludeUrlRewrite(true);
+            $product->setForceReindexRequired(1);
+            if (!$product->getStockData()){
+                $product->setStockData(1);
+            }
+            $product->setIsChangedCategories(1);
+            $product->setAmountsHasChanged(1);
+
+//        $product->setIsMassupdate(true);
+//        $product->setExcludeUrlRewrite(true);
 
         $product->save();
 
@@ -836,9 +843,9 @@ class Mage_Catalog_Model_Convert_Adapter_Product
          */
         Mage::dispatchEvent($this->_eventPrefix . '_after', array());
 
-        $entity = new Varien_Object();
-        Mage::getSingleton('index/indexer')->processEntityAction(
-            $entity, self::ENTITY, Mage_Index_Model_Event::TYPE_SAVE
-        );
+//        $entity = new Varien_Object();
+//        Mage::getSingleton('index/indexer')->processEntityAction(
+//            $entity, self::ENTITY, Mage_Index_Model_Event::TYPE_SAVE
+//        );
     }
 }

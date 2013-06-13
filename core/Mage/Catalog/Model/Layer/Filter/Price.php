@@ -344,7 +344,36 @@ class Mage_Catalog_Model_Layer_Filter_Price extends Mage_Catalog_Model_Layer_Fil
         $this->_getResource()->applyPriceRange($this);
         return $this;
     }
-
+    /**
+     * Initialize filter items
+     *
+     * @return  Mage_Catalog_Model_Layer_Filter_Abstract
+     */
+    protected function _initItems()
+    {
+        $data = $this->_getItemsData();
+        $items=array();
+        foreach ($data as $itemData) {
+            $currentVals = Mage::helper('amshopby')->getRequestValues($this->_requestVar, null);
+            $ind = array_search($itemData['value'], $currentVals);
+            if (false === $ind){
+                $currentVals[] = $itemData['value'];
+            }
+            else {
+                $currentVals[$ind]  = null;
+                unset($currentVals[$ind]);    
+            }            
+            $item =  $this->_createItem(
+                $itemData['label'],
+                $currentVals,
+                $itemData['count']
+            );
+            $item->setOptionId($itemData['value']);
+            $items[] = $item;
+        }
+        $this->_items = $items;
+        return $this;
+    }
     /**
      * Validate and parse filter request param
      *

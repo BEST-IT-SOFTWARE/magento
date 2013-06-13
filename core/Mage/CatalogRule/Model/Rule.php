@@ -281,7 +281,7 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
         }
 
         if ($productId) {
-            Mage::getSingleton('index/indexer')->processEntityAction(
+            Mage::getSingleton('index/indexer')->logEvent(
                 new Varien_Object(array('id' => $productId)),
                 Mage_Catalog_Model_Product::ENTITY,
                 Mage_Catalog_Model_Product_Indexer_Price::EVENT_TYPE_REINDEX_PRICE

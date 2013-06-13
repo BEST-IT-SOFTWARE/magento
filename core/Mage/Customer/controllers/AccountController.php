@@ -121,7 +121,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
     public function loginAction()
     {
         if ($this->_getSession()->isLoggedIn()) {
-            $this->_redirect('*/*/');
+            $this->_redirectToHome();
             return;
         }
         $this->getResponse()->setHeader('Login-Required', 'true');
@@ -137,7 +137,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
     public function loginPostAction()
     {
         if ($this->_getSession()->isLoggedIn()) {
-            $this->_redirect('*/*/');
+            $this->_redirectToHome();
             return;
         }
         $session = $this->_getSession();
@@ -178,13 +178,16 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
     /**
      * Define target URL and redirect customer after logging in
      */
+    protected function  getInitialUrl(){
+        return Mage::getBaseUrl()."sales";
+    }
     protected function _loginPostRedirect()
     {
         $session = $this->_getSession();
 
-        if (!$session->getBeforeAuthUrl() || $session->getBeforeAuthUrl() == Mage::getBaseUrl()) {
+        if (!$session->getBeforeAuthUrl()) {
             // Set default URL to redirect customer to
-            $session->setBeforeAuthUrl(Mage::helper('customer')->getAccountUrl());
+            $session->setBeforeAuthUrl($this->getInitialUrl());
             // Redirect customer to the last page visited after logging in
             if ($session->isLoggedIn()) {
                 if (!Mage::getStoreConfigFlag(
@@ -206,7 +209,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
                 $session->setBeforeAuthUrl(Mage::helper('customer')->getLoginUrl());
             }
         } else if ($session->getBeforeAuthUrl() == Mage::helper('customer')->getLogoutUrl()) {
-            $session->setBeforeAuthUrl(Mage::helper('customer')->getDashboardUrl());
+            $session->setBeforeAuthUrl($this->getInitialUrl());
         } else {
             if (!$session->getAfterAuthUrl()) {
                 $session->setAfterAuthUrl($session->getBeforeAuthUrl());
@@ -244,7 +247,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
     public function createAction()
     {
         if ($this->_getSession()->isLoggedIn()) {
-            $this->_redirect('*/*');
+            $this->_redirectToHome();
             return;
         }
 
@@ -256,11 +259,14 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
     /**
      * Create customer account action
      */
+    public function _redirectToHome(){
+        $this->_loginPostRedirect();
+    }
     public function createPostAction()
     {
         $session = $this->_getSession();
         if ($session->isLoggedIn()) {
-            $this->_redirect('*/*/');
+            $this->_redirectToHome();
             return;
         }
         $session->setEscapeMessages(true); // prevent XSS injection in user input
@@ -347,8 +353,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
                         return;
                     } else {
                         $session->setCustomerAsLoggedIn($customer);
-                        $url = $this->_welcomeCustomer($customer);
-                        $this->_redirectSuccess($url);
+                        $this->_welcomeCustomer($customer);
                         return;
                     }
                 } else {
@@ -413,11 +418,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
             Mage::app()->getStore()->getId()
         );
 
-        $successUrl = Mage::getUrl('*/*/index', array('_secure'=>true));
-        if ($this->_getSession()->getBeforeAuthUrl()) {
-            $successUrl = $this->_getSession()->getBeforeAuthUrl(true);
-        }
-        return $successUrl;
+        $this->_redirectToHome();
     }
 
     /**
@@ -589,17 +590,19 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
      * User is redirected on this action when he clicks on the corresponding link in password reset confirmation email
      *
      */
-    public function resetPasswordAction()
+    public function resetpasswordAction()
     {
         $resetPasswordLinkToken = (string) $this->getRequest()->getQuery('token');
         $customerId = (int) $this->getRequest()->getQuery('id');
         try {
             $this->_validateResetPasswordLinkToken($customerId, $resetPasswordLinkToken);
-            $this->loadLayout();
             // Pass received parameters to the reset forgotten password form
-            $this->getLayout()->getBlock('resetPassword')
-                ->setCustomerId($customerId)
-                ->setResetPasswordLinkToken($resetPasswordLinkToken);
+            $this->loadLayout();
+            $block = $this->getLayout()->getBlock('resetPassword');
+            if ($block) {
+                $block->setCustomerId($customerId);
+                $block->setResetPasswordLinkToken($resetPasswordLinkToken);
+            }
             $this->renderLayout();
         } catch (Exception $exception) {
             $this->_getSession()->addError(Mage::helper('customer')->__('Your password reset link has expired.'));
@@ -798,7 +801,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
                 foreach ($errors as $message) {
                     $this->_getSession()->addError($message);
                 }
-                $this->_redirect('*/*/edit');
+                $this->_redirect('*/*/');
                 return $this;
             }
 
@@ -819,7 +822,7 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
             }
         }
 
-        $this->_redirect('*/*/edit');
+        $this->_redirect('*/*/');
     }
 
     /**

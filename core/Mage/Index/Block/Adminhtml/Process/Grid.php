@@ -75,7 +75,9 @@ class Mage_Index_Block_Adminhtml_Process_Grid extends Mage_Adminhtml_Block_Widge
             }
             $item->setName($item->getIndexer()->getName());
             $item->setDescription($item->getIndexer()->getDescription());
-            $item->setUpdateRequired($item->getUnprocessedEventsCollection()->count() > 0 ? 1 : 0);
+            $remaining_events = $item->getUnprocessedEventsCollection()->count();
+            $item->setUpdateRequired($remaining_events > 0 ? 1 : 0);
+            $item->setUpdatesRemaining($remaining_events);
             if ($item->isLocked()) {
                 $item->setStatus(Mage_Index_Model_Process::STATUS_RUNNING);
             }
@@ -208,6 +210,7 @@ class Mage_Index_Block_Adminhtml_Process_Grid extends Mage_Adminhtml_Block_Widge
                 break;
             case 1:
                 $class = 'grid-severity-critical';
+                $value .= "({$row->getUpdatesRemaining()})";
                 break;
         }
         return '<span class="'.$class.'"><span>'.$value.'</span></span>';

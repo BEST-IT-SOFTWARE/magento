@@ -38,7 +38,7 @@ class Mage_Adminhtml_Helper_Dashboard_Order extends Mage_Adminhtml_Helper_Dashbo
     {
         $isFilter = $this->getParam('store') || $this->getParam('website') || $this->getParam('group');
 
-        $this->_collection = Mage::getResourceSingleton('reports/order_collection')
+        $this->_collection = Mage::getResourceModel('reports/order_collection')
             ->prepareSummary($this->getParam('period'), 0, 0, $isFilter);
 
         if ($this->getParam('store')) {

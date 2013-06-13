@@ -161,6 +161,7 @@ class Mage_Core_Model_Cache
                         $options = $cacheOptions['memcached'];
                     }
                     $enable2levels = true;
+                    
                     $backendType = 'Libmemcached';
                 } elseif (extension_loaded('memcache')) {
                     if (isset($cacheOptions['memcached'])) {
@@ -467,6 +468,9 @@ class Mage_Core_Model_Cache
             foreach ($this->_allowedCacheOptions as $key => $val) {
                 $this->_allowedCacheOptions[$key] = false;
             }
+        }
+        if (Mage::getStoreConfig('ban_use_config_cache', "default")) {
+            $this->_allowedCacheOptions["config"] = false;
         }
 
         return $this;

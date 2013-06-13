@@ -411,8 +411,8 @@ class Mage_Core_Model_Config extends Mage_Core_Model_Config_Base
      */
     protected function _canUseCacheForInit()
     {
-        return Mage::app()->useCache('config') && $this->_allowCacheForInit
-            && !$this->_loadCache($this->_getCacheLockId());
+        return Mage::app()->useCache('config') && $this->_allowCacheForInit;
+//            && !$this->_loadCache($this->_getCacheLockId());
     }
 
     /**

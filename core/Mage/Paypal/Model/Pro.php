@@ -247,10 +247,12 @@ class Mage_Paypal_Model_Pro
     {
         $captureTxnId = $this->_getParentTransactionId($payment);
         if ($captureTxnId) {
+            $refundTxnId = $payment->getTransactionId();
             $api = $this->getApi();
             $order = $payment->getOrder();
             $api->setPayment($payment)
                 ->setTransactionId($captureTxnId)
+                ->setMessageSubmissionId($refundTxnId)
                 ->setAmount($amount)
                 ->setCurrencyCode($order->getBaseCurrencyCode())
             ;

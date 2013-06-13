@@ -152,7 +152,16 @@ class Mage_Catalog_Model_Url
      */
     public function getStores($storeId = null)
     {
-        return $this->getResource()->getStores($storeId);
+        $stores =  $this->getResource()->getStores($storeId);
+            if ($storeId==null){
+            $the_stores_we_ACTUALLY_want=array();
+            if (isset($stores[1])){
+                $the_stores_we_ACTUALLY_want[1]=$stores[1];
+            }
+            return $the_stores_we_ACTUALLY_want;
+        } else {
+            return $stores;
+        }
     }
 
     /**
@@ -317,7 +326,8 @@ class Mage_Catalog_Model_Url
         }
 
         foreach ($category->getChilds() as $child) {
-            $this->_refreshCategoryRewrites($child, $category->getUrlPath() . '/', $refreshProducts);
+//            $this->_refreshCategoryRewrites($child, $category->getUrlPath() . '/', $refreshProducts);
+                $this->queueRefreshCategoryRewrite($child);
         }
 
         return $this;
@@ -341,6 +351,9 @@ class Mage_Catalog_Model_Url
         else {
             $urlKey = $this->getProductModel()->formatUrlKey($product->getUrlKey());
         }
+        /*if ($category->getLevel() <= 1) { //don't generate simple url rewrite
+            return $this;
+        }*/
 
         $idPath      = $this->generatePath('id', $product, $category);
         $targetPath  = $this->generatePath('target', $product, $category);
@@ -418,14 +431,22 @@ class Mage_Catalog_Model_Url
 
             foreach ($products as $product) {
                 // Product always must have rewrite in root category
-                $this->_refreshProductRewrite($product, $rootCategory);
-                $this->_refreshProductRewrite($product, $category);
+
+                //$this->queueRefreshProductRewrite($product);
+//                $this->_refreshProductRewrite($product, $rootCategory);
+//                $this->_refreshProductRewrite($product, $category);
             }
             $firstIteration = false;
             unset($products);
         }
         $this->_rewrites = $originalRewrites;
         return $this;
+    }
+    public function queueRefreshProductRewrite($product){
+        Mage::getModel("spcaching/caching")->reindexProductUrlId($product->getEntityId());
+    }
+    public function queueRefreshCategoryRewrite($category){
+        Mage::getModel("spcaching/caching")->reindexCategoryUrlId($category->getEntityId());
     }
 
     /**
@@ -476,6 +497,9 @@ class Mage_Catalog_Model_Url
      */
     public function refreshProductRewrite($productId, $storeId = null)
     {
+        if (!Mage::helper('sputilities/index')->shouldReindexProduct($productId)) {
+            return $this;
+        }
         if (is_null($storeId)) {
             foreach ($this->getStores() as $store) {
                 $this->refreshProductRewrite($productId, $store->getId());
@@ -559,13 +583,15 @@ class Mage_Catalog_Model_Url
             }
 
             foreach ($products as $product) {
-                $this->_refreshProductRewrite($product, $this->_categories[$storeRootCategoryId]);
-                foreach ($product->getCategoryIds() as $categoryId) {
-                    if ($categoryId != $storeRootCategoryId && isset($this->_categories[$categoryId])) {
-                        if (strpos($this->_categories[$categoryId]['path'], $storeRootCategoryPath . '/') !== 0) {
-                            continue;
+                if (Mage::helper('sputilities/index')->shouldReindexProduct($product->getId())) {
+                    $this->_refreshProductRewrite($product, $this->_categories[$storeRootCategoryId]);
+                    foreach ($product->getCategoryIds() as $categoryId) {
+                        if ($categoryId != $storeRootCategoryId && isset($this->_categories[$categoryId])) {
+                            if (strpos($this->_categories[$categoryId]['path'], $storeRootCategoryPath . '/') !== 0) {
+                                continue;
+                            }
+                            $this->_refreshProductRewrite($product, $this->_categories[$categoryId]);
                         }
-                        $this->_refreshProductRewrite($product, $this->_categories[$categoryId]);
                     }
                 }
             }

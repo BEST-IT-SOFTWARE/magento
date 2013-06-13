@@ -632,7 +632,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
         $baseAmountToRefund = $this->_formatAmount($creditmemo->getBaseGrandTotal());
         $order = $this->getOrder();
 
-        $this->_generateTransactionId(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND);
+        $this->_generateTransactionId(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND. $this->getAmountRefunded());
 
         // call refund from gateway if required
         $isOnline = false;
@@ -645,7 +645,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
                 $isOnline = true;
                 $captureTxn = $this->_lookupTransaction($invoice->getTransactionId());
                 if ($captureTxn) {
-                    $this->setParentTransactionId($captureTxn->getTxnId());
+                    $this->_generateTransactionId(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND. $this->getAmountRefunded(), $captureTxn);
                 }
                 $this->setShouldCloseParentTransaction(true); // TODO: implement multiple refunds per capture
                 try {
@@ -707,7 +707,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
     public function registerRefundNotification($amount)
     {
         $notificationAmount = $amount;
-        $this->_generateTransactionId(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND,
+        $this->_generateTransactionId(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND.$this->getAmountRefunded(),
             $this->_lookupTransaction($this->getParentTransactionId())
         );
         if ($this->_isTransactionExists()) {
@@ -740,6 +740,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
             } else {
                 $adjustment = array('adjustment_negative' => $baseGrandTotal - $amount);
             }
+            $adjustment["qtys"]=array("no-item"=>0); //Prevent the updating of products
             $creditmemo = $serviceModel->prepareInvoiceCreditmemo($invoice, $adjustment);
             if ($creditmemo) {
                 $totalRefunded = $invoice->getBaseTotalRefunded() + $creditmemo->getBaseGrandTotal();
@@ -751,6 +752,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
             } else {
                 $adjustment = array('adjustment_negative' => $baseGrandTotal - $amount);
             }
+            $adjustment["qtys"]=array("no-item"=>0); //Prevent the updating of products
             $creditmemo = $serviceModel->prepareCreditmemo($adjustment);
             if ($creditmemo) {
                 $totalRefunded = $order->getBaseTotalRefunded() + $creditmemo->getBaseGrandTotal();

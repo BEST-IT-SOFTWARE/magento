@@ -49,7 +49,7 @@ class Mage_Log_Model_Visitor extends Mage_Core_Model_Abstract
     const VISITOR_TYPE_CUSTOMER = 'c';
     const VISITOR_TYPE_VISITOR  = 'v';
 
-    protected $_skipRequestLogging = false;
+    protected $_skipRequestLogging = true;
 
     /**
      * Onject initialization

@@ -136,14 +136,14 @@
                     </reports>
                 </observers>
             </customer_logout>
-            <catalog_controller_product_view>
+<!--            <catalog_controller_product_view>
                 <observers>
                     <reports>
                         <class>reports/event_observer</class>
                         <method>catalogProductView</method>
                     </reports>
                 </observers>
-            </catalog_controller_product_view>
+            </catalog_controller_product_view> -->
             <sendfriend_product>
                 <observers>
                     <reports>

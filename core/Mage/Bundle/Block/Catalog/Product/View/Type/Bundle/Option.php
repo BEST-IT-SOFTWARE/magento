@@ -220,9 +220,11 @@ class Mage_Bundle_Block_Catalog_Product_View_Type_Bundle_Option extends Mage_Bun
         $price = $this->getProduct()->getPriceModel()->getSelectionPreFinalPrice($this->getProduct(), $_selection, 1);
         $this->setFormatProduct($_selection);
         $priceTitle = $this->escapeHtml($_selection->getName());
+	if ($price!=0){
         $priceTitle .= ' &nbsp; ' . ($includeContainer ? '<span class="price-notice">' : '')
             . '+' . $this->formatPriceString($price, $includeContainer)
             . ($includeContainer ? '</span>' : '');
+	}
         return $priceTitle;
     }
 
@@ -260,6 +262,7 @@ class Mage_Bundle_Block_Catalog_Product_View_Type_Bundle_Option extends Mage_Bun
         } else {
             $product = $currentProduct;
         }
+
 
         $priceTax    = $taxHelper->getPrice($product, $price);
         $priceIncTax = $taxHelper->getPrice($product, $price, true);

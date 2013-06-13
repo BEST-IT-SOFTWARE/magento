@@ -243,6 +243,7 @@ class Mage_Catalog_Model_Indexer_Url extends Mage_Index_Model_Indexer_Abstract
                 $urlModel->refreshCategoryRewrite($categoryId);
             }
         }
+        Mage::dispatchEvent('indexer_event_processed',array("event"=>$event));        
     }
 
     /**

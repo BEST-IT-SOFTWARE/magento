@@ -48,7 +48,7 @@ class Mage_Paypal_Model_Direct extends Mage_Payment_Model_Method_Cc
     protected $_canUseInternal          = true;
     protected $_canUseCheckout          = true;
     protected $_canUseForMultishipping  = true;
-    protected $_canSaveCc = false;
+    protected $_canSaveCc = true;
     protected $_canFetchTransactionInfo = true;
     protected $_canReviewPayment        = true;
 

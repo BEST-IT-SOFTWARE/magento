@@ -48,6 +48,12 @@
                 </entities>
             </persistent_resource>
         </models>
+        
+        <blocks>
+            <persistent>
+                <class>Mage_Persistent_Block</class>
+            </persistent>
+        </blocks>
 
         <resources>
             <persistent_setup>

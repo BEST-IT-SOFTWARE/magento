@@ -245,15 +245,16 @@ class Mage_Page_Block_Html_Head extends Mage_Core_Block_Template
         // get static files from the js folder, no need in lookups
         foreach ($staticItems as $params => $rows) {
             foreach ($rows as $name) {
-                $items[$params][] = $mergeCallback ? Mage::getBaseDir() . DS . 'js' . DS . $name : $baseJsUrl . $name;
+                $items[$params][] = $mergeCallback ? Mage::getBaseDir() . DS . 'js' . DS. $name : $baseJsUrl . DS. $name;
             }
         }
 
         // lookup each file basing on current theme configuration
         foreach ($skinItems as $params => $rows) {
             foreach ($rows as $name) {
-                $items[$params][] = $mergeCallback ? $designPackage->getFilename($name, array('_type' => 'skin'))
+                $file = $mergeCallback ? $designPackage->getFilename($name, array('_type' => 'skin'))
                     : $designPackage->getSkinUrl($name, array());
+                $items[$params][] = $file;
             }
         }
 

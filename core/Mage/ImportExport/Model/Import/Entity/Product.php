@@ -537,6 +537,7 @@ class Mage_ImportExport_Model_Import_Entity_Product extends Mage_ImportExport_Mo
         return true;
     }
 
+
     /**
      * Set valid attribute set and product type to rows with all scopes
      * to ensure that existing products doesn't changed.
@@ -1130,7 +1131,8 @@ class Mage_ImportExport_Model_Import_Entity_Product extends Mage_ImportExport_Mo
         $strftimeFormat = Varien_Date::convertZendToStrftime(Varien_Date::DATETIME_INTERNAL_FORMAT, true, true);
         $productLimit   = null;
         $productsQty    = null;
-
+        $uploadedGalleryFiles = array();
+        
         while ($bunch = $this->_dataSourceModel->getNextBunch()) {
             $entityRowsIn = array();
             $entityRowsUp = array();
@@ -1140,7 +1142,6 @@ class Mage_ImportExport_Model_Import_Entity_Product extends Mage_ImportExport_Mo
             $tierPrices   = array();
             $groupPrices  = array();
             $mediaGallery = array();
-            $uploadedGalleryFiles = array();
             $previousType = null;
             $previousAttributeSet = null;
 
@@ -1223,6 +1224,13 @@ class Mage_ImportExport_Model_Import_Entity_Product extends Mage_ImportExport_Mo
                         if (!array_key_exists($rowData[$imageCol], $uploadedGalleryFiles)) {
                             $uploadedGalleryFiles[$rowData[$imageCol]] = $this->_uploadMediaFiles($rowData[$imageCol]);
                         }
+                        $mediaGallery[$rowSku][$rowData[$imageCol]] = array(
+                            'attribute_id'      => $resource->getAttribute("media_gallery")->getId(),
+                            'label'             => $rowData[$imageCol."_label"],
+                            'position'          => 0,
+                            'disabled'          => 0,
+                            'value'             => $uploadedGalleryFiles[$rowData[$imageCol]]
+                        );
                         $rowData[$imageCol] = $uploadedGalleryFiles[$rowData[$imageCol]];
                     }
                 }
@@ -1605,7 +1613,7 @@ class Mage_ImportExport_Model_Import_Entity_Product extends Mage_ImportExport_Mo
                 if (self::SCOPE_DEFAULT != $this->getRowScope($rowData)) {
                     continue;
                 }
-
+                $row=array();
                 $row['product_id'] = $this->_newSku[$rowData[self::COL_SKU]]['entity_id'];
                 $row['stock_id'] = 1;
 

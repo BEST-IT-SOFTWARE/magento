@@ -142,14 +142,14 @@
                     </inventory>
                 </observers>
             </sales_model_service_quote_submit_before>
-            <sales_model_service_quote_submit_success>
+<!--            <sales_model_service_quote_submit_success>
                 <observers>
                     <inventory>
                         <class>cataloginventory/observer</class>
                         <method>reindexQuoteInventory</method>
                     </inventory>
                 </observers>
-            </sales_model_service_quote_submit_success>
+            </sales_model_service_quote_submit_success>-->
             <sales_model_service_quote_submit_failure>
                 <observers>
                     <inventory>

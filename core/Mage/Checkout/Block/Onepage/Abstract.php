@@ -144,6 +144,37 @@ abstract class Mage_Checkout_Block_Onepage_Abstract extends Mage_Core_Block_Temp
         }
         return '';
     }
+    public function getAddressesHtmlList($type, $include_use_shipping = false)
+    {
+        if ($this->isCustomerLoggedIn()) {
+            $addressId = $this->getAddress()->getCustomerAddressId();
+            if (empty($addressId)) {
+                if ($type=='billing') {
+                    $address = $this->getCustomer()->getPrimaryBillingAddress();
+                } else {
+                    $address = $this->getCustomer()->getPrimaryShippingAddress();
+                }
+                if ($address) {
+                    $addressId = $address->getId();
+                }
+            }
+            
+            $addresses = array();
+            if ($include_use_shipping){
+                $addresses []= '<li>Use Delivery Address<input type="radio" name="'.$type.'_address_id'.'" value="use_shipping"'.
+                    (!$addressId?"checked='checked'":"").'/> </li>';                
+            }
+            foreach ($this->getCustomer()->getAddresses() as $address) {
+                $addresses []= "<li>".$address->format('oneline'). 
+                        '<input type="radio" name="'.$type.'_address_id'.'" value="'.$address->getId().'"'.
+                            ($address->getId()==$addressId?"checked='checked'":"").'/> </li>';
+            }
+            $addresses []= "<li style='display:none'>" .
+                    '<input id="'.$type.'_address_new" type="radio" name="'.$type.'_address_id'.'" value="" /> </li>';
+            return "<ul>".implode("", $addresses)."</ul>";
+        }
+        return '';
+    }
 
     public function getCountryHtmlSelect($type)
     {

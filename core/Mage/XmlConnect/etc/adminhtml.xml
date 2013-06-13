@@ -26,7 +26,7 @@
  */
 -->
 <config>
-    <menu>
+    <!--<menu>
         <xmlconnect translate="title" module="xmlconnect">
             <title>Mobile</title>
             <sort_order>35</sort_order>
@@ -53,7 +53,7 @@
                 </queue>
             </children>
         </xmlconnect>
-    </menu>
+    </menu>-->
     <acl>
         <resources>
             <admin translate="title" module="xmlconnect">

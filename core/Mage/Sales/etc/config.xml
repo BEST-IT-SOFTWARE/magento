@@ -1491,7 +1491,7 @@
     </global>
     <frontend>
         <secure_url>
-            <sales>/sales/</sales>
+            <sales>/sales/order/</sales>
         </secure_url>
         <routers>
             <sales>

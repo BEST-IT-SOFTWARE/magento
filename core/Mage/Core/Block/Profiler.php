@@ -49,6 +49,7 @@ class Mage_Core_Block_Profiler extends Mage_Core_Block_Abstract
             $count = Varien_Profiler::fetch($name,'count');
             $realmem = Varien_Profiler::fetch($name,'realmem');
             $emalloc = Varien_Profiler::fetch($name,'emalloc');
+            $parent = Varien_Profiler::fetch($name,'parent');
             if ($sum<.0010 && $count<10 && $emalloc<10000) {
                 continue;
             }
@@ -58,6 +59,7 @@ class Mage_Core_Block_Profiler extends Mage_Core_Block_Abstract
                 .'<td align="right">'.$count.'</td>'
                 .'<td align="right">'.number_format($emalloc).'</td>'
                 .'<td align="right">'.number_format($realmem).'</td>'
+                .'<td align="right">'.$parent.'</td>'
                 .'</tr>'
             ;
         }

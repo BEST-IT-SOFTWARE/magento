@@ -104,6 +104,7 @@ class Mage_Paypal_Model_Api_Nvp extends Mage_Paypal_Model_Api_Abstract
         'TRANSACTIONID'   => 'transaction_id',
         'AUTHORIZATIONID' => 'authorization_id',
         'REFUNDTRANSACTIONID' => 'refund_transaction_id',
+        'MSGSUBID' => 'message_submission_id',
         'COMPLETETYPE'    => 'complete_type',
         'AMT' => 'amount',
         'ITEMAMT' => 'subtotal_amount',
@@ -308,7 +309,7 @@ class Mage_Paypal_Model_Api_Nvp extends Mage_Paypal_Model_Api_Abstract
      * RefundTransaction request/response map
      * @var array
      */
-    protected $_refundTransactionRequest = array('TRANSACTIONID', 'REFUNDTYPE', 'CURRENCYCODE', 'NOTE',);
+    protected $_refundTransactionRequest = array('TRANSACTIONID', 'REFUNDTYPE', 'CURRENCYCODE', 'NOTE', 'MSGSUBID');
     protected $_refundTransactionResponse = array('REFUNDTRANSACTIONID', 'GROSSREFUNDAMT',);
 
     /**
