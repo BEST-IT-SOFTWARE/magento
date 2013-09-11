@@ -1,0 +1,9 @@
+[program:erp]
+command=php /vagrant/bgtask/RunBeanstalkdTasks.php default
+numprocs=3
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+startsecs=0
+autostart=true
+
+

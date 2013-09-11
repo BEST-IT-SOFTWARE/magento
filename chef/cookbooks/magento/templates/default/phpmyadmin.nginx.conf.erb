@@ -1,0 +1,27 @@
+server {
+	#listen   80; ## listen for ipv4; this line is default and implied
+	#listen   [::]:80 default_server ipv6only=on; ## listen for ipv6
+	server_name magento.phpmyadmin;
+	index index.php;
+	root /opt/phpmyadmin;
+	
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ /index.php?$args;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
+	 location ~ \.php$ {
+		try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_read_timeout 600;
+		fastcgi_pass unix:/var/run/php-fpm-www.sock;
+                fastcgi_index index.php;
+                include fastcgi_params;
+		fastcgi_param MAGE_IS_DEVELOPER_MODE 1;
+	    }
+	    location ~ /\.ht {
+		    deny  all;
+	    }
+}

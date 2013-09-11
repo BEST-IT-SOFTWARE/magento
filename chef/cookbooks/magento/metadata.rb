@@ -1,0 +1,15 @@
+name             "magento"
+version          "0.0.2"
+depends          'apt'
+depends          'vim'
+depends          'supervisor'
+depends          'nginx'
+depends          'php'
+depends          'php-fpm'
+depends          'mysql'
+depends          'database'
+depends          'redisio'
+depends          'memcached'
+depends          'beanstalkd'
+depends          'magic_shell'
+depends          "phpmyadmin"

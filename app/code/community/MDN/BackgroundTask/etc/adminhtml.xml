@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<config>
+<menu>
+            <erp>
+                <children>
+                	<tools>
+                		<children>
+		                    <background_task translate="title" module="BackgroundTask">
+		                        <title>Background Tasks</title>
+		                        <action>BackgroundTask/Admin/Grid</action>
+		                        <sort_order>900</sort_order>
+		                    </background_task>
+		                </children>
+		            </tools>
+                </children>
+             </erp>
+        </menu>
+		<acl>
+	        <resources>
+	            <admin>
+	                <children>
+	                	<erp>
+	                		<children>
+	                			<tools>
+                                                        <title>Tools</title>
+	                				<children>
+				                		 <background_task translate="title" module="BackgroundTask">
+				                		 	<title>Background Tasks</title>
+				                		 </background_task>		
+	                				</children>
+	                			</tools>
+	                		</children>
+	                	</erp>
+	                    <system>
+	                        <children>
+	                            <config>
+	                                <children>
+	                                    <backgroundtask module="BackgroundTask">
+											<title>Background Tasks</title>
+	                                    </backgroundtask>
+	                                </children>
+	                            </config>
+	                        </children>
+	                    </system>
+	                </children>
+	            </admin>
+	         </resources>
+	    </acl>
+         <translate>
+            <modules>
+                <MDN_BackgroundTask>
+                    <files>
+                        <default>MDN_BackgroundTask.csv</default>
+                    </files>
+                </MDN_BackgroundTask>
+            </modules>
+        </translate>
+		<layout>
+            <updates>
+                <BackgroundTask>
+                    <file>BackgroundTask.xml</file>
+                </BackgroundTask>
+            </updates>
+        </layout>
+</config>

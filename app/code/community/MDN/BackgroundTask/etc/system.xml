@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <backgroundtask translate="label" module="BackgroundTask">
+            <label>Background Tasks</label>
+            <tab>ERP</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>500</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general>
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <max_execution_time translate="label">
+                            <label>Max Execution Time</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <comment>seconds</comment>
+                        </max_execution_time>
+                        <delete_error_tasks translate="label">
+                            <label>Delete failed Tasks ?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </delete_error_tasks>
+                        <history_duration translate="label">
+                            <label>History Duration</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <comment>hours</comment>
+                        </history_duration>
+                        <developer_email translate="label">
+                            <label>Developper Email Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <comment>To notify for errors</comment>
+                        </developer_email>
+                        <debug translate="label">
+                            <label>Debug Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </debug>
+                        <immediate_mode translate="label">
+                            <label>Immediate Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </immediate_mode>
+                        <store_stack_trace translate="label">
+                            <label>Store stack trace</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </store_stack_trace>
+                    </fields>
+                </general>
+            </groups>
+        </backgroundtask>
+    </sections>
+</config>
