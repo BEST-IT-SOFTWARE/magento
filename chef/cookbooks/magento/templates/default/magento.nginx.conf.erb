@@ -6,7 +6,7 @@ server {
 	location ~ /skin/m {
 		rewrite  ^/skin/m/([^/]+)(/.*.(js|css))$  /lib/minify/m.php?f=$2&d=$1 last;
 	}
-
+	error_log	/vagrant/var/log/php-error.log notice;
     location ~ /cached_(catalogevent_)?media\.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_read_timeout 30;

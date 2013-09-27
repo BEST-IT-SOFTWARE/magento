@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Cm_Cache>
+            <version>0.1</version>
+        </Cm_Cache>
+    </modules>
+</config>
