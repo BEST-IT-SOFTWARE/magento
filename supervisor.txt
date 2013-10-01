@@ -1,0 +1,232 @@
+DOCS:
+http://stackoverflow.com/questions/10716159/nginx-and-supervisor-setup-in-ubuntu
+
+
+CONFIG:
+
+
+
+; supervisor config file
+
+[unix_http_server]
+file=/var/run//supervisor.sock   ; (the path to the socket file)
+chmod=0700                       ; sockef file mode (default 0700)
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log ; (main log file;default $CWD/supervisord.log)
+pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+childlogdir=/var/log/supervisor            ; ('AUTO' child log dir, default $TEMP)
+
+[inet_http_server]
+port=127.0.0.1:9001
+username=
+password=
+
+
+
+; the below section must remain in the config file for RPC
+; (supervisorctl/web interface) to work, additional interfaces may be
+; added by defining them in separate rpcinterface: sections
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run//supervisor.sock ; use a unix:// URL  for a unix socket
+
+; The [include] section can just contain the "files" setting.  This
+; setting can list multiple files (separated by whitespace or
+; newlines).  It can also contain wildcards.  The filenames are
+; interpreted as relative to this file.  Included files *cannot*
+; include files themselves.
+
+[include]
+files = /etc/supervisor/conf.d/*.conf
+
+
+
+
+
+
+
+
+
+
+
+
+CONF.D
+
+
+
+
+[program:run_critical_tasks]
+command=nice -n 5 php /var/www/pipa/RunBeanstalkdTasks.php rma,sales_grid,verifyemail,replacements,purchase_order
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+startsecs=0
+
+[program:run_erp_default]
+command=nice -n 10 php /var/www/pipa/RunBeanstalkdTasks.php default
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:shipment]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php shipment
+numprocs=1
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:run_erp_not_default]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php criteo,silverpop,refresh_suppy_needs
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:run_customer_prefs]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php customer_prefs
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:run_customer_prefs_extra]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php customer_prefs
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=false
+startsecs=0
+
+[program:customer_segment_events]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php customer_segment_events
+numprocs=2
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:run_marketing]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php marketing
+numprocs=2
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:check_product]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php checkproduct,check_product
+numprocs=2
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:fixing_bird]
+command=php /var/www/pipa/RunBeanstalkdTasks.php fixing_bird
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+[program:run_erp_tasksextra2]
+command=php /var/www/pipa/RunBeanstalkdTasks.php default,customer_prefs,silverpop,criteo,shipment,bestsellers,marketing
+numprocs=20
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=false
+startsecs=0
+
+
+
+
+[program:run_reindexing]
+command=nice -n 10 php /var/www/pipa/RunBeanstalkdTasks.php reindexing,reindexing_4,reindexing_5,reindexing_6,reindexing_9,reindexing_10,reindexing_11
+numprocs=8
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+startsecs=0
+
+#[program:run_reindexing_7]
+#command=nice -n 10 php /var/www/pipa/RunBeanstalkdTasks.php reindexing_7
+#numprocs=5
+#process_name=%(program_name)s_%(process_num)02d
+#autorestart=true
+#startsecs=0
+
+[program:run_reindexing_extra]
+command=nice -n 15 php /var/www/pipa/RunBeanstalkdTasks.php reindexing,reindexing_4,reindexing_5,reindexing_6,reindexing_9,reindexing_10,reindexing_11
+numprocs=30
+process_name=%(program_name)s_%(process_num)02d
+autostart=false
+autorestart=true
+startsecs=0
+
+[program:run_reindexing_stocks]
+command=nice -n 5 php /var/www/pipa/RunBeanstalkdTasks.php reindexing_8
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autostart=true
+autorestart=true
+startsecs=0
+
+[program:run_reindexing_prices]
+command=php /var/www/pipa/RunBeanstalkdTasks.php reindexing_2
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autostart=true
+autorestart=true
+startsecs=0
+
+[program:run_reindexing_url]
+command=nice -n 5 php /var/www/pipa/RunBeanstalkdTasks.php reindexing_3
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autostart=true
+autorestart=true
+startsecs=0
+
+[program:run_reindexing_eav]
+command=nice -n 10 php /var/www/pipa/RunBeanstalkdTasks.php reindexing_1
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
+autostart=true
+autorestart=true
+startsecs=0
+
+[program:run_reindexing_old]
+command=php /var/www/pipa/RunReindexing.php
+numprocs=20
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=false
+startsecs=0
+
+[program:run_reindexing_old_once]
+command=php /var/www/pipa/RunReindexing.php
+numprocs=20
+process_name=%(program_name)s_%(process_num)02d
+autorestart=false
+autostart=false
+startsecs=0
+
+[program:product_order]
+command=php /var/www/pipa/RunBeanstalkdTasks.php product_order
+numprocs= 2
+process_name=%(program_name)s_%(process_num)02d
+autorestart=true
+autostart=true
+startsecs=0
+
+
+
+
+

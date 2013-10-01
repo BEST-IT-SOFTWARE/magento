@@ -61,7 +61,7 @@
     </global>
     <adminhtml>
         <menu>
-            <erp>
+            <BEST>
                 <children>
                     <tools>
                         <title>Tools</title>
@@ -74,13 +74,13 @@
                         </children>
                     </tools>
                 </children>
-            </erp>
+            </BEST>
         </menu>
         <acl>
             <resources>
                 <admin>
                     <children>
-                        <erp>
+                        <BEST>
                             <children>
                                 <tools>
                                     <children>
@@ -90,7 +90,7 @@
                                     </children>
                                 </tools>
                             </children>
-                        </erp>
+                        </BEST>
                         <system>
                             <children>
                                 <config>

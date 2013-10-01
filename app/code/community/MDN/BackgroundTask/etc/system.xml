@@ -1,9 +1,15 @@
 <?xml version="1.0"?>
 <config>
+	<tabs>
+        <BEST translate="label" module="BackgroundTask">
+            <label>BEST IT SOFTWARE</label>
+            <sort_order>1</sort_order>
+        </BEST>
+    </tabs>
     <sections>
         <backgroundtask translate="label" module="BackgroundTask">
             <label>Background Tasks</label>
-            <tab>ERP</tab>
+            <tab>BEST</tab>
             <frontend_type>text</frontend_type>
             <sort_order>500</sort_order>
             <show_in_default>1</show_in_default>

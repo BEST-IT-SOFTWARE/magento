@@ -3,8 +3,8 @@
 # See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
 Vagrant.configure("2") do |config|
-	config.vm.box = "magento_box"
-##  config.vm.box_url = "https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04-i386_chef-11.4.4.box"
+	config.vm.box = "magento"
+	config.vm.box_url = "magento_box.box"
 
   config.vm.network :forwarded_port, guest: 3306, host: 3366
   config.ssh.forward_agent = true
@@ -12,8 +12,8 @@ Vagrant.configure("2") do |config|
   is_not_windows = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/ || false
   host_ip = "192.168.50.5"
 
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = true
+  config.hostmanager.enabled = is_not_windows
+  config.hostmanager.manage_host = is_not_windows
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = true
   config.vm.hostname = 'magento.dev'
@@ -31,11 +31,4 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--cpus", "4"]
   end
 
-##  config.vm.provision :chef_solo do |chef|
-##    chef.binary_env = "GEM_HOME=/opt/chef/embedded/lib/ruby/gems/1.9.1/ GEM_PATH= "
-##    chef.binary_path = "/opt/chef/bin/"
-##    chef.cookbooks_path = "chef/cookbooks"
-##    chef.roles_path = ["chef/roles"]
-##    chef.add_role "role[magento_dev]"
-##  end
 end
