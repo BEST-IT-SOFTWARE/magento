@@ -749,5 +749,11 @@ class Cm_Cache_Backend_Redis extends Zend_Cache_Backend implements Zend_Cache_Ba
     {
         $this->_redis->del(self::PREFIX_KEY.$id);
     }
-
+    
+    
+    
+    //customisations
+    public function getRedis(){
+        return $this->_redis;
+    }
 }
