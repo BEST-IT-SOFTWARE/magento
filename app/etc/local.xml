@@ -99,6 +99,16 @@
                 <compression_lib>gzip</compression_lib>
             </backend_options>
 	</full_page_cache>
+	 <watchtower>
+            <blocks>
+                <supervisor/>
+                <beanstalkd/>
+                <indexing/>
+                <redis/>
+                <dbstatus/>
+                <validations/>
+            </blocks>
+    </watchtower>
     </global>
     <admin>
         <routers>

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<config>
+<menu>
+            <BEST>
+                <children>
+                	<tools>
+                		<children>
+		                    <background_task translate="title" module="BackgroundTask">
+		                        <title>Background Tasks</title>
+		                        <action>BackgroundTask/Admin/Grid</action>
+		                        <sort_order>900</sort_order>
+		                    </background_task>
+		                </children>
+		            </tools>
+                </children>
+             </BEST>
+        </menu>
+		<acl>
+	        <resources>
+	            <admin>
+	                <children>
+	                	<BEST>
+	                		<children>
+	                			<tools>
+                                                        <title>Tools</title>
+	                				<children>
+				                		 <background_task translate="title" module="BackgroundTask">
+				                		 	<title>Background Tasks</title>
+				                		 </background_task>		
+	                				</children>
+	                			</tools>
+	                		</children>
+	                	</BEST>
+	                    <system>
+	                        <children>
+	                            <config>
+	                                <children>
+	                                    <backgroundtask module="BackgroundTask">
+											<title>Background Tasks</title>
+	                                    </backgroundtask>
+	                                </children>
+	                            </config>
+	                        </children>
+	                    </system>
+	                </children>
+	            </admin>
+	         </resources>
+	    </acl>
+         <translate>
+            <modules>
+                <BEST_BackgroundTask>
+                    <files>
+                        <default>BEST_BackgroundTask.csv</default>
+                    </files>
+                </BEST_BackgroundTask>
+            </modules>
+        </translate>
+		<layout>
+            <updates>
+                <BackgroundTask>
+                    <file>BackgroundTask.xml</file>
+                </BackgroundTask>
+            </updates>
+        </layout>
+</config>

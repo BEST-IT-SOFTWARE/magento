@@ -1,0 +1,9 @@
+attribute:
+#  catalog_product:
+#    attribute_name_1:
+#      parameter_1: value_1
+#      parameter_2: value_2
+attribute_set:
+#  catalog_product:
+#    attribute_set_name: 
+#      attributes: [attribute_name_1, attribute_name_2]  

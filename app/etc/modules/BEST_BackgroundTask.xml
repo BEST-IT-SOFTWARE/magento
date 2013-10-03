@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <BEST_BackgroundTask>
+            <active>true</active>
+            <codePool>community</codePool>
+        </BEST_BackgroundTask>
+    </modules>
+</config> 

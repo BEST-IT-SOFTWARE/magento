@@ -180,9 +180,9 @@ class Mage_Adminhtml_Catalog_CategoryController extends Mage_Adminhtml_Controlle
             $this->loadLayout();
 
             $eventResponse = new Varien_Object(array(
-                'content' => $this->getLayout()->getBlock('category.edit')->getFormHtml()
+                'content' => utf8_encode($this->getLayout()->getBlock('category.edit')->getFormHtml()
                     . $this->getLayout()->getBlock('category.tree')
-                    ->getBreadcrumbsJavascript($breadcrumbsPath, 'editingCategoryBreadcrumbs'),
+                    ->getBreadcrumbsJavascript($breadcrumbsPath, 'editingCategoryBreadcrumbs')),
                 'messages' => $this->getLayout()->getMessagesBlock()->getGroupedHtml(),
             ));
 

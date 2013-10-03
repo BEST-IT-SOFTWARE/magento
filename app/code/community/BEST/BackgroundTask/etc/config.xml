@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <BEST_BackgroundTask>
+            <version>1.3.5</version>
+        </BEST_BackgroundTask>
+    </modules>
+    <global>
+        <helpers>
+            <BackgroundTask>
+                <class>BEST_BackgroundTask_Helper</class>
+            </BackgroundTask>
+        </helpers>
+        <blocks>
+            <BackgroundTask>
+                <class>BEST_BackgroundTask_Block</class>
+            </BackgroundTask>
+        </blocks>
+        <models>
+
+            <BackgroundTask>
+                <class>BEST_BackgroundTask_Model</class>
+                <resourceModel>BackgroundTask_mysql4</resourceModel>
+            </BackgroundTask>
+
+            <BackgroundTask_mysql4>
+                <class>BEST_BackgroundTask_Model_Mysql4</class>
+                <entities>
+                    <Task>
+                        <table>backgroundtask</table>
+                    </Task>
+                    <Taskgroup>
+                        <table>backgroundtask_group</table>
+                    </Taskgroup>
+                </entities>
+            </BackgroundTask_mysql4>
+
+        </models>
+        <resources>
+            <BackgroundTask_setup>
+                <setup>
+                    <module>BEST_BackgroundTask</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </BackgroundTask_setup>
+            <BackgroundTask_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </BackgroundTask_write>
+            <BackgroundTask_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </BackgroundTask_read>
+        </resources>
+
+    </global>
+    <adminhtml>
+        <menu>
+            <BEST>
+                <children>
+                    <tools>
+                        <title>Tools</title>
+                        <children>
+                            <background_task translate="title" module="BackgroundTask">
+                                <title>Background Tasks</title>
+                                <action>BackgroundTask/Admin/Grid</action>
+                                <sort_order>900</sort_order>
+                            </background_task>
+                        </children>
+                    </tools>
+                </children>
+            </BEST>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <BEST>
+                            <children>
+                                <tools>
+                                    <children>
+                                        <background_task translate="title" module="BackgroundTask">
+                                            <title>Background Tasks</title>
+                                        </background_task>
+                                    </children>
+                                </tools>
+                            </children>
+                        </BEST>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <backgroundtask module="BackgroundTask">
+                                            <title>Background Tasks</title>
+                                        </backgroundtask>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <translate>
+            <modules>
+                <BEST_BackgroundTask>
+                    <files>
+                        <default>BEST_BackgroundTask.csv</default>
+                    </files>
+                </BEST_BackgroundTask>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <BackgroundTask>
+                    <file>BackgroundTask.xml</file>
+                </BackgroundTask>
+            </updates>
+        </layout>
+    </adminhtml>
+    <frontend>
+        <routers>
+            <BackgroundTask>
+                <use>standard</use>
+                <args>
+                    <module>BEST_BackgroundTask</module>
+                    <frontName>BackgroundTask</frontName>
+                </args>
+            </BackgroundTask>
+        </routers>
+    </frontend>
+
+    <crontab>
+        <jobs>
+<!--            <execute_tasks>
+                <schedule>
+                    <cron_expr>* */1 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>BackgroundTask/Observer::ExecuteTasks</model>
+                </run>
+            </execute_tasks>-->
+        </jobs>
+    </crontab>
+
+    <default>
+        <backgroundtask>
+            <general>
+                <max_execution_time>30</max_execution_time>
+                <delete_error_tasks>0</delete_error_tasks>
+                <debug>1</debug>
+                <history_duration>6</history_duration>
+                <immediate_mode>0</immediate_mode>
+            </general>
+        </backgroundtask>
+    </default>
+
+    <admin>
+        <routers>
+            <BackgroundTask>
+                <use>admin</use>
+                <args>
+                    <module>BEST_BackgroundTask</module>
+                    <frontName>BackgroundTask</frontName>
+                </args>
+            </BackgroundTask>
+        </routers>
+    </admin>
+
+</config>
